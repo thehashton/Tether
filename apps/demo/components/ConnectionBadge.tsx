@@ -1,7 +1,7 @@
 'use client';
 
 import type { TetherState } from 'tether-ws';
-import { MetricCard } from '@/components/MetricCard';
+import { MetricCard, MetricStat, MetricStatGrid } from '@/components/MetricCard';
 
 const STATE_STYLES: Record<
   TetherState,
@@ -19,7 +19,7 @@ const STATE_STYLES: Record<
     valueClass: 'text-emerald-300',
   },
   reconnecting: {
-    label: 'Reconnecting',
+    label: 'Retrying',
     dotClass: 'metric-dot-reconnecting',
     valueClass: 'text-orange-300',
   },
@@ -34,10 +34,14 @@ export function ConnectionBadge({ state }: ConnectionBadgeProps) {
   const { label, dotClass, valueClass } = STATE_STYLES[state];
   return (
     <MetricCard label="Connection">
-      <div className="flex items-center gap-3">
-        <span className={`metric-dot ${dotClass}`} aria-hidden />
-        <p className={`metric-hero-value ${valueClass}`}>{label}</p>
-      </div>
+      <MetricStatGrid>
+        <MetricStat value={label} hint="status" valueClassName={valueClass} />
+        <MetricStat
+          value={<span className={`metric-dot metric-dot-lg ${dotClass}`} aria-hidden />}
+          hint="socket"
+          title="WebSocket connection indicator"
+        />
+      </MetricStatGrid>
     </MetricCard>
   );
 }
