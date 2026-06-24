@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { InfoTooltip, TooltipLabel } from '@/components/InfoTooltip';
+import { TooltipLabel } from '@/components/InfoTooltip';
 
 interface MetricCardProps {
   label: string;
@@ -15,8 +15,13 @@ export function MetricCard({ label, tooltip, children, footer }: MetricCardProps
   return (
     <div className="metric-card">
       <div className="metric-card-header">
-        <p className="metric-card-label">{label}</p>
-        {tooltip ? <InfoTooltip text={tooltip} size="xs" placement="below" /> : null}
+        {tooltip ? (
+          <TooltipLabel text={tooltip} placement="below">
+            <p className="metric-card-label">{label}</p>
+          </TooltipLabel>
+        ) : (
+          <p className="metric-card-label">{label}</p>
+        )}
       </div>
       <div className="metric-card-body">{children}</div>
       {hasFooter ? <div className="metric-card-footer">{footer}</div> : null}
