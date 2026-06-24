@@ -1,14 +1,17 @@
 'use client';
 
 import Image from 'next/image';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { TetherState } from 'tether-ws';
 import { BackoffMeter } from '@/components/BackoffMeter';
 import { ConnectionBadge } from '@/components/ConnectionBadge';
 import { ControlPanel } from '@/components/ControlPanel';
+import { FloodMeter } from '@/components/FloodMeter';
 import { MessageLog, type LogEntry, type LogEntryType } from '@/components/MessageLog';
 import { QueueDepth } from '@/components/QueueDepth';
 import { getTetherClient } from '@/lib/tether-client';
+
+const FEATURES = ['Reconnection', 'Backpressure', 'Multiplexing', 'Auth refresh'] as const;
 
 let logId = 0;
 
@@ -20,6 +23,17 @@ export function DemoDashboard() {
   const [bufferedAmount, setBufferedAmount] = useState(0);
   const [entries, setEntries] = useState<LogEntry[]>([]);
   const [slowNetwork, setSlowNetwork] = useState(false);
+  const [floodReceived, setFloodReceived] = useState(0);
+  const [floodTarget, setFloodTarget] = useState<number | null>(null);
+  const [floodBackpressure, setFloodBackpressure] = useState(0);
+  const floodTargetRef = useRef<number | null>(null);
+
+  const handleFloodStart = useCallback((count: number) => {
+    floodTargetRef.current = count;
+    setFloodReceived(0);
+    setFloodTarget(count);
+    setFloodBackpressure(0);
+  }, []);
 
   const pushLog = useCallback((type: LogEntryType, message: string, detail?: unknown) => {
     setEntries((prev) => [
@@ -58,6 +72,9 @@ export function DemoDashboard() {
         pushLog('flushed', `Replayed ${msg.id} from queue`, msg);
       }),
       client.on('backpressure', ({ depth, direction }) => {
+        if (direction === 'inbound') {
+          setFloodBackpressure((n) => n + 1);
+        }
         pushLog('backpressure', `${direction} depth ${depth}`);
       }),
       client.on('auth-refreshed', ({ token }) => {
@@ -67,15 +84,19 @@ export function DemoDashboard() {
         pushLog('error', err.message);
       }),
       client.on('message', (payload) => {
-        if (
-          typeof payload === 'object' &&
-          payload !== null &&
-          'type' in payload &&
-          ((payload as { type: string }).type === 'tether:ping' ||
-            (payload as { type: string }).type === 'tether:pong')
-        ) {
-          pushLog('heartbeat', JSON.stringify(payload));
-          return;
+        if (typeof payload === 'object' && payload !== null && 'type' in payload) {
+          const wire = payload as { type: string; action?: string; count?: number };
+          if (wire.type === 'tether:ping' || wire.type === 'tether:pong') {
+            pushLog('heartbeat', JSON.stringify(payload));
+            return;
+          }
+          if (wire.type === 'tether:control-ack' && wire.action === 'flood' && wire.count) {
+            floodTargetRef.current = wire.count;
+            setFloodTarget(wire.count);
+            setFloodReceived(0);
+            pushLog('info', `Server acknowledged flood — sending ${wire.count} messages`);
+            return;
+          }
         }
         pushLog('received', JSON.stringify(payload));
       }),
@@ -88,8 +109,15 @@ export function DemoDashboard() {
     client.subscribe('flood', (payload) => {
       if (typeof payload === 'object' && payload !== null && 'index' in payload) {
         const index = (payload as { index: number }).index;
-        if (index % 100 === 0) {
-          pushLog('received', `[flood] index ${index}`);
+        const target = floodTargetRef.current;
+        setFloodReceived((prev) => prev + 1);
+        if (index === 0) {
+          pushLog('received', `[flood] started (index 0)`);
+        } else if (index % 100 === 0) {
+          pushLog('received', `[flood] milestone index ${index}`);
+        }
+        if (target !== null && index === target - 1) {
+          pushLog('info', `[flood] complete — ${target} messages received`);
         }
       }
     });
@@ -109,31 +137,65 @@ export function DemoDashboard() {
   }, [pushLog]);
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-4 p-6">
-      <header className="mb-2 flex items-center gap-4">
-        <Image src="/logo.png" alt="tether-ws logo" width={180} height={60} priority />
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">tether-ws demo</h1>
-          <p className="mt-1 text-[var(--muted)]">
-            Watch reconnection, backoff, queue drain, bufferedAmount backpressure, multiplexing, and
-            auth refresh in real time.
+    <div className="page-shell mx-auto flex max-w-5xl flex-col gap-8 px-4 py-8 sm:px-6 sm:py-10">
+      <header className="hero">
+        <div className="hero-glow" aria-hidden />
+        <div className="relative flex flex-col items-center text-center">
+          <p className="mb-4 text-xs font-semibold tracking-[0.2em] text-[var(--accent)] uppercase">
+            Live WebSocket demo
           </p>
+          <Image
+            src="/logo.png"
+            alt="tether"
+            width={280}
+            height={72}
+            priority
+            className="h-auto w-[min(280px,85vw)] drop-shadow-[0_0_24px_rgba(61,214,198,0.25)]"
+          />
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-[var(--muted)]">
+            Watch reconnection, backoff, queue drain,{' '}
+            <span className="text-[var(--text)]">bufferedAmount</span> backpressure, multiplexing,
+            and auth refresh — in real time.
+          </p>
+          <ul className="mt-6 flex flex-wrap justify-center gap-2">
+            {FEATURES.map((feature) => (
+              <li key={feature} className="feature-pill">
+                <span className="feature-pill-dot" aria-hidden />
+                {feature}
+              </li>
+            ))}
+          </ul>
         </div>
       </header>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <ConnectionBadge state={state} />
-        <BackoffMeter attempt={attempt} delayMs={delayMs} />
-        <QueueDepth queueDepth={queueDepth} bufferedAmount={bufferedAmount} />
-      </div>
+      <section>
+        <h2 className="section-title">Live metrics</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ConnectionBadge state={state} />
+          <BackoffMeter attempt={attempt} delayMs={delayMs} />
+          <QueueDepth queueDepth={queueDepth} bufferedAmount={bufferedAmount} />
+          <FloodMeter
+            received={floodReceived}
+            target={floodTarget}
+            backpressureEvents={floodBackpressure}
+          />
+        </div>
+      </section>
 
-      <ControlPanel
-        onLog={(type, message) => pushLog(type, message)}
-        slowNetwork={slowNetwork}
-        onSlowNetworkChange={setSlowNetwork}
-      />
+      <section>
+        <h2 className="section-title">Controls</h2>
+        <ControlPanel
+          onLog={(type, message) => pushLog(type, message)}
+          onFloodStart={handleFloodStart}
+          slowNetwork={slowNetwork}
+          onSlowNetworkChange={setSlowNetwork}
+        />
+      </section>
 
-      <MessageLog entries={entries} />
+      <section>
+        <h2 className="section-title">Event log</h2>
+        <MessageLog entries={entries} />
+      </section>
     </div>
   );
 }

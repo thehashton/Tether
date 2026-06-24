@@ -66,6 +66,7 @@ function handleControl(ws: WsLike, state: ConnectionState, message: TetherContro
       break;
     case 'flood': {
       const count = Math.max(1, Math.min(1000, message.count ?? 500));
+      sendJson(ws, { type: 'tether:control-ack', action: 'flood', count }, 0);
       for (let i = 0; i < count; i++) {
         sendJson(
           ws,

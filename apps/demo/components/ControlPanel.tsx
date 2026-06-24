@@ -5,11 +5,17 @@ import { getTetherClient, sendControl } from '@/lib/tether-client';
 
 interface ControlPanelProps {
   onLog: (type: 'info' | 'sent', message: string) => void;
+  onFloodStart: (count: number) => void;
   slowNetwork: boolean;
   onSlowNetworkChange: (enabled: boolean) => void;
 }
 
-export function ControlPanel({ onLog, slowNetwork, onSlowNetworkChange }: ControlPanelProps) {
+export function ControlPanel({
+  onLog,
+  onFloodStart,
+  slowNetwork,
+  onSlowNetworkChange,
+}: ControlPanelProps) {
   const [latencyMs, setLatencyMs] = useState(1000);
 
   const handleKill = () => {
@@ -26,8 +32,23 @@ export function ControlPanel({ onLog, slowNetwork, onSlowNetworkChange }: Contro
   };
 
   const handleFlood = () => {
-    sendControl('flood', { count: 500 });
-    onLog('sent', 'Requested server flood (500 inbound messages)');
+    const count = 500;
+    const client = getTetherClient();
+    onFloodStart(count);
+
+    if (client.state !== 'open') {
+      onLog(
+        'info',
+        `Connection is ${client.state} — flood command queued; will run after reconnect`,
+      );
+    } else {
+      onLog(
+        'info',
+        `Sending flood command — server will push ${count} messages (watch Inbound flood counter, not 500 log lines)`,
+      );
+    }
+
+    sendControl('flood', { count });
   };
 
   const handleAuthRefresh = async () => {
@@ -37,65 +58,72 @@ export function ControlPanel({ onLog, slowNetwork, onSlowNetworkChange }: Contro
 
   const handleQueueWhileDown = () => {
     const client = getTetherClient();
+    if (client.state === 'open') {
+      onLog(
+        'info',
+        'Connection is open — messages send immediately. Kill the connection first to see them queue.',
+      );
+    }
     for (let i = 0; i < 5; i++) {
       client.send({ demo: `offline-${i}` }, { channel: 'demo' });
     }
-    onLog('sent', 'Queued 5 demo messages (send while disconnected to see queue drain)');
+    if (client.state !== 'open') {
+      onLog('sent', 'Queued 5 demo messages — will replay in order on reconnect');
+    } else {
+      onLog('sent', 'Sent 5 demo messages on open connection');
+    }
   };
 
   return (
-    <div className="rounded-lg border border-[var(--border)] bg-[var(--panel)] px-4 py-3">
-      <p className="mb-3 text-xs uppercase tracking-wide text-[var(--muted)]">Control panel</p>
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={handleKill}
-          className="rounded-md bg-red-600 px-3 py-2 text-sm font-medium hover:bg-red-500"
-        >
-          Kill connection now
-        </button>
-        <button
-          type="button"
-          onClick={handleSlowToggle}
-          className={`rounded-md px-3 py-2 text-sm font-medium ${
-            slowNetwork ? 'bg-amber-600 hover:bg-amber-500' : 'bg-slate-700 hover:bg-slate-600'
-          }`}
-        >
-          {slowNetwork ? 'Disable slow network' : 'Simulate slow network'}
-        </button>
-        <label className="flex items-center gap-2 rounded-md bg-slate-800 px-3 py-2 text-sm">
-          Latency ms
-          <input
-            type="number"
-            min={0}
-            max={2000}
-            step={100}
-            value={latencyMs}
-            onChange={(e) => setLatencyMs(Number(e.target.value))}
-            className="w-20 rounded border border-[var(--border)] bg-[var(--bg)] px-2 py-1"
-          />
-        </label>
-        <button
-          type="button"
-          onClick={handleFlood}
-          className="rounded-md bg-orange-600 px-3 py-2 text-sm font-medium hover:bg-orange-500"
-        >
-          Flood 500 messages
-        </button>
-        <button
-          type="button"
-          onClick={handleAuthRefresh}
-          className="rounded-md bg-cyan-700 px-3 py-2 text-sm font-medium hover:bg-cyan-600"
-        >
-          Force token refresh now
-        </button>
-        <button
-          type="button"
-          onClick={handleQueueWhileDown}
-          className="rounded-md bg-slate-700 px-3 py-2 text-sm font-medium hover:bg-slate-600"
-        >
-          Queue 5 messages
-        </button>
+    <div className="panel p-5">
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="mr-2 text-xs font-medium text-[var(--muted)]">Connection</span>
+          <button type="button" onClick={handleKill} className="btn btn-danger">
+            Kill connection
+          </button>
+          <button
+            type="button"
+            onClick={handleSlowToggle}
+            className={`btn btn-warn ${slowNetwork ? 'btn-warn-active' : ''}`}
+          >
+            {slowNetwork ? 'Disable slow network' : 'Simulate slow network'}
+          </button>
+          <label className="btn btn-ghost flex cursor-pointer items-center gap-2">
+            Latency
+            <input
+              type="number"
+              min={0}
+              max={2000}
+              step={100}
+              value={latencyMs}
+              onChange={(e) => setLatencyMs(Number(e.target.value))}
+              className="w-16 rounded border border-[var(--border)] bg-[var(--bg)] px-2 py-0.5 text-center text-sm tabular-nums"
+            />
+            <span className="text-[var(--muted)]">ms</span>
+          </label>
+        </div>
+
+        <div className="h-px bg-[var(--border)]" />
+
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="mr-2 text-xs font-medium text-[var(--muted)]">Stress test</span>
+          <button type="button" onClick={handleFlood} className="btn btn-orange">
+            Flood 500 messages
+          </button>
+          <button type="button" onClick={handleQueueWhileDown} className="btn btn-ghost">
+            Queue 5 messages
+          </button>
+        </div>
+
+        <div className="h-px bg-[var(--border)]" />
+
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="mr-2 text-xs font-medium text-[var(--muted)]">Auth</span>
+          <button type="button" onClick={handleAuthRefresh} className="btn btn-accent">
+            Force token refresh
+          </button>
+        </div>
       </div>
     </div>
   );

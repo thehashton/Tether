@@ -2,12 +2,27 @@
 
 import type { TetherState } from 'tether-ws';
 
-const STATE_STYLES: Record<TetherState, { label: string; className: string }> = {
-  idle: { label: 'Idle', className: 'bg-slate-600' },
-  connecting: { label: 'Connecting', className: 'bg-amber-500 animate-pulse' },
-  open: { label: 'Open', className: 'bg-emerald-500' },
-  reconnecting: { label: 'Reconnecting', className: 'bg-orange-500 animate-pulse' },
-  closed: { label: 'Closed', className: 'bg-red-500' },
+const STATE_STYLES: Record<
+  TetherState,
+  { label: string; dotClass: string; valueClass: string }
+> = {
+  idle: { label: 'Idle', dotClass: 'bg-slate-500', valueClass: 'text-slate-300' },
+  connecting: {
+    label: 'Connecting',
+    dotClass: 'bg-amber-400 animate-pulse shadow-[0_0_8px_#fbbf24]',
+    valueClass: 'text-amber-300',
+  },
+  open: {
+    label: 'Open',
+    dotClass: 'bg-emerald-400 shadow-[0_0_8px_#34d399]',
+    valueClass: 'text-emerald-300',
+  },
+  reconnecting: {
+    label: 'Reconnecting',
+    dotClass: 'bg-orange-400 animate-pulse shadow-[0_0_8px_#fb923c]',
+    valueClass: 'text-orange-300',
+  },
+  closed: { label: 'Closed', dotClass: 'bg-red-400', valueClass: 'text-red-300' },
 };
 
 interface ConnectionBadgeProps {
@@ -15,13 +30,13 @@ interface ConnectionBadgeProps {
 }
 
 export function ConnectionBadge({ state }: ConnectionBadgeProps) {
-  const { label, className } = STATE_STYLES[state];
+  const { label, dotClass, valueClass } = STATE_STYLES[state];
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--panel)] px-4 py-3">
-      <span className={`inline-block h-3 w-3 rounded-full ${className}`} />
-      <div>
-        <p className="text-xs uppercase tracking-wide text-[var(--muted)]">Connection</p>
-        <p className="text-lg font-semibold">{label}</p>
+    <div className="panel flex items-center gap-4 px-5 py-4">
+      <span className={`inline-block h-3.5 w-3.5 shrink-0 rounded-full ${dotClass}`} />
+      <div className="min-w-0">
+        <p className="panel-label">Connection</p>
+        <p className={`metric-value ${valueClass}`}>{label}</p>
       </div>
     </div>
   );
