@@ -21,18 +21,18 @@ export interface LogEntry {
   detail?: unknown;
 }
 
-const TYPE_COLORS: Record<LogEntryType, string> = {
-  sent: 'text-sky-400',
-  received: 'text-emerald-400',
-  queued: 'text-amber-400',
-  flushed: 'text-lime-400',
-  heartbeat: 'text-violet-400',
-  backpressure: 'text-orange-400',
-  'auth-refreshed': 'text-[var(--accent)]',
-  statechange: 'text-slate-400',
-  reconnecting: 'text-orange-300',
-  error: 'text-red-400',
-  info: 'text-[var(--muted)]',
+const TYPE_CLASS: Record<LogEntryType, string> = {
+  sent: 'log-type-sent',
+  received: 'log-type-received',
+  queued: 'log-type-queued',
+  flushed: 'log-type-flushed',
+  heartbeat: 'log-type-heartbeat',
+  backpressure: 'log-type-backpressure',
+  'auth-refreshed': 'log-type-auth-refreshed',
+  statechange: 'log-type-statechange',
+  reconnecting: 'log-type-reconnecting',
+  error: 'log-type-error',
+  info: 'log-type-info',
 };
 
 interface MessageLogProps {
@@ -51,18 +51,24 @@ export function MessageLog({ entries, className = '' }: MessageLogProps) {
         </div>
         <h2 className="message-log-title">Event log</h2>
       </div>
-      <div className="terminal min-h-0 flex-1 overflow-y-auto p-4 text-xs leading-relaxed">
+      <div
+        className="terminal p-5"
+        role="log"
+        aria-live="polite"
+        aria-relevant="additions"
+        aria-label="WebSocket event log"
+      >
         {entries.length === 0 ? (
-          <p className="text-[var(--muted)]">Waiting for events…</p>
+          <p className="log-entry log-type-info">Waiting for events…</p>
         ) : (
           entries.map((entry) => (
-            <div key={entry.id} className="mb-1.5 hover:bg-white/[0.02]">
-              <span className="text-[var(--muted)]">
+            <div key={entry.id} className="log-entry mb-2 hover:bg-white/[0.02]">
+              <span className="log-entry-timestamp">
                 {new Date(entry.ts).toLocaleTimeString()}.
                 {String(entry.ts % 1000).padStart(3, '0')}
               </span>{' '}
-              <span className={`font-medium ${TYPE_COLORS[entry.type]}`}>[{entry.type}]</span>{' '}
-              <span className="text-[var(--text)]">{entry.message}</span>
+              <span className={`font-semibold ${TYPE_CLASS[entry.type]}`}>[{entry.type}]</span>{' '}
+              <span className="log-entry-message">{entry.message}</span>
             </div>
           ))
         )}

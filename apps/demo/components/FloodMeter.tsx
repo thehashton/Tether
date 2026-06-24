@@ -51,13 +51,13 @@ export function FloodMeter({ received, target, backpressureEvents }: FloodMeterP
         <MetricStat
           value={receivedDisplay}
           hint="received"
-          valueClassName="text-orange-300"
+          valueClassName="text-orange-200"
           tooltip="Flood-channel messages received this run."
         />
         <MetricStat
           value={totalDisplay}
           hint="of total"
-          valueClassName="text-orange-300/80"
+          valueClassName="text-orange-200/90"
           tooltip={
             target !== null ? `${pct}% of the flood delivered so far.` : 'No active flood — press Flood 500 msgs.'
           }

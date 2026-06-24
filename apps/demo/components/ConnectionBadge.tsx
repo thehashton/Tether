@@ -8,23 +8,23 @@ const STATE_STYLES: Record<
   TetherState,
   { label: string; dotClass: string; valueClass: string }
 > = {
-  idle: { label: 'Idle', dotClass: 'metric-dot-idle', valueClass: 'text-slate-300' },
+  idle: { label: 'Idle', dotClass: 'metric-dot-idle', valueClass: 'text-slate-200' },
   connecting: {
     label: 'Connecting',
     dotClass: 'metric-dot-connecting',
-    valueClass: 'text-amber-300',
+    valueClass: 'text-amber-200',
   },
   open: {
     label: 'Open',
     dotClass: 'metric-dot-open',
-    valueClass: 'text-emerald-300',
+    valueClass: 'text-emerald-200',
   },
   reconnecting: {
     label: 'Retrying',
     dotClass: 'metric-dot-reconnecting',
-    valueClass: 'text-orange-300',
+    valueClass: 'text-orange-200',
   },
-  closed: { label: 'Closed', dotClass: 'metric-dot-closed', valueClass: 'text-red-300' },
+  closed: { label: 'Closed', dotClass: 'metric-dot-closed', valueClass: 'text-red-200' },
 };
 
 interface ConnectionBadgeProps {

@@ -165,7 +165,7 @@ export function DemoDashboard() {
   }, [pushLog]);
 
   return (
-    <div className="page-shell mx-auto flex max-w-6xl flex-col gap-5 px-4 py-6 sm:px-6 sm:py-8">
+    <div id="main-content" className="page-shell mx-auto flex max-w-7xl flex-col gap-7 px-4 py-8 sm:px-6 sm:py-10">
       <header className="hero">
         <div className="hero-glow" aria-hidden />
         <a
@@ -175,7 +175,7 @@ export function DemoDashboard() {
           className="hero-github-btn"
           aria-label="View Tether on GitHub"
         >
-          <IconGithub className="h-4 w-4" />
+          <IconGithub className="h-6 w-6" />
         </a>
         <div className="relative flex flex-col items-center text-center">
           <Image
@@ -186,12 +186,12 @@ export function DemoDashboard() {
             priority
             className="h-auto w-[min(280px,85vw)] drop-shadow-[0_0_24px_rgba(61,214,198,0.25)]"
           />
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-[var(--muted)]">
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-[var(--muted)] sm:text-xl">
             Watch reconnection, backoff, queue drain,{' '}
             <span className="text-[var(--text)]">bufferedAmount</span> backpressure, multiplexing,
             and auth refresh — in real time.
           </p>
-          <ul className="mt-6 flex flex-wrap justify-center gap-2">
+          <ul className="mt-8 flex flex-wrap justify-center gap-3">
             {FEATURES.map((feature) => (
               <FeaturePill key={feature.label} label={feature.label} tooltip={feature.tooltip} />
             ))}

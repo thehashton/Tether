@@ -1,8 +1,57 @@
-node_modules
-dist
-.next
-.env*.local
-coverage
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
 *.tsbuildinfo
+
+# Test & coverage
+coverage/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+!.env*.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Caches
+.eslintcache
+.cache/
+.turbo/
+.swc/
+
+# Deployment
+.vercel/
+
+# OS
 .DS_Store
-.vercel
+.AppleDouble
+.LSOverride
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editors & IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# Misc local tooling
+*.pem
+*.key

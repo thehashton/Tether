@@ -127,14 +127,14 @@ export function ControlPanel({
             className="btn-danger"
             onClick={handleKill}
           >
-            <BtnLabel icon={<IconKill className="h-3.5 w-3.5" />}>Kill connection</BtnLabel>
+            <BtnLabel icon={<IconKill className="h-5 w-5" />}>Kill connection</BtnLabel>
           </ControlButton>
           <ControlButton
             tooltip="Toggles artificial delay on every server response."
             className={`btn-warn ${slowNetwork ? 'btn-warn-active' : ''}`}
             onClick={handleSlowToggle}
           >
-            <BtnLabel icon={<IconSlowNetwork className="h-3.5 w-3.5" />}>
+            <BtnLabel icon={<IconSlowNetwork className="h-5 w-5" />}>
               {slowNetwork ? 'Slow network on' : 'Slow network'}
             </BtnLabel>
           </ControlButton>
@@ -176,14 +176,14 @@ export function ControlPanel({
             className="btn-orange"
             onClick={handleFlood}
           >
-            <BtnLabel icon={<IconFlood className="h-3.5 w-3.5" />}>Flood 500 msgs</BtnLabel>
+            <BtnLabel icon={<IconFlood className="h-5 w-5" />}>Flood 500 msgs</BtnLabel>
           </ControlButton>
           <ControlButton
             tooltip="Sends 5 messages while disconnected — they queue and flush in order on reconnect."
             className="btn-ghost"
             onClick={handleQueueWhileDown}
           >
-            <BtnLabel icon={<IconQueue className="h-3.5 w-3.5" />}>Queue 5 msgs</BtnLabel>
+            <BtnLabel icon={<IconQueue className="h-5 w-5" />}>Queue 5 msgs</BtnLabel>
           </ControlButton>
         </div>
       </section>
@@ -199,7 +199,7 @@ export function ControlPanel({
             className="btn-accent"
             onClick={handleAuthRefresh}
           >
-            <BtnLabel icon={<IconRefresh className="h-3.5 w-3.5" />}>Force token refresh</BtnLabel>
+            <BtnLabel icon={<IconRefresh className="h-5 w-5" />}>Force token refresh</BtnLabel>
           </ControlButton>
         </div>
       </section>
