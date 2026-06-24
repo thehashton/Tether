@@ -137,13 +137,10 @@ export function DemoDashboard() {
   }, [pushLog]);
 
   return (
-    <div className="page-shell mx-auto flex max-w-5xl flex-col gap-8 px-4 py-8 sm:px-6 sm:py-10">
+    <div className="page-shell mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 sm:py-10">
       <header className="hero">
         <div className="hero-glow" aria-hidden />
         <div className="relative flex flex-col items-center text-center">
-          <p className="mb-4 text-xs font-semibold tracking-[0.2em] text-[var(--accent)] uppercase">
-            Live demo
-          </p>
           <Image
             src="/logo.png"
             alt="Tether"
@@ -170,7 +167,7 @@ export function DemoDashboard() {
 
       <section>
         <h2 className="section-title">Live metrics</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <ConnectionBadge state={state} />
           <BackoffMeter attempt={attempt} delayMs={delayMs} />
           <QueueDepth queueDepth={queueDepth} bufferedAmount={bufferedAmount} />
@@ -182,19 +179,21 @@ export function DemoDashboard() {
         </div>
       </section>
 
-      <section>
-        <h2 className="section-title">Controls</h2>
-        <ControlPanel
-          onLog={(type, message) => pushLog(type, message)}
-          onFloodStart={handleFloodStart}
-          slowNetwork={slowNetwork}
-          onSlowNetworkChange={setSlowNetwork}
-        />
-      </section>
+      <section className="grid gap-6 lg:grid-cols-2 lg:items-stretch">
+        <div className="flex min-h-0 flex-col">
+          <h2 className="section-title">Controls</h2>
+          <ControlPanel
+            onLog={(type, message) => pushLog(type, message)}
+            onFloodStart={handleFloodStart}
+            slowNetwork={slowNetwork}
+            onSlowNetworkChange={setSlowNetwork}
+          />
+        </div>
 
-      <section>
-        <h2 className="section-title">Event log</h2>
-        <MessageLog entries={entries} />
+        <div className="flex min-h-0 flex-col">
+          <h2 className="section-title">Event log</h2>
+          <MessageLog entries={entries} className="min-h-[28rem] flex-1 lg:min-h-0" />
+        </div>
       </section>
     </div>
   );

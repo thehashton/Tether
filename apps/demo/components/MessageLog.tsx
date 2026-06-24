@@ -37,16 +37,17 @@ const TYPE_COLORS: Record<LogEntryType, string> = {
 
 interface MessageLogProps {
   entries: LogEntry[];
+  className?: string;
 }
 
-export function MessageLog({ entries }: MessageLogProps) {
+export function MessageLog({ entries, className = '' }: MessageLogProps) {
   return (
-    <div className="panel flex h-[28rem] flex-col overflow-hidden">
-      <div className="flex items-center gap-2 border-b border-[var(--border)] px-4 py-2.5">
+    <div className={`panel flex flex-col overflow-hidden ${className}`}>
+      <div className="flex shrink-0 items-center gap-2 border-b border-[var(--border)] px-4 py-2.5">
         <span className="h-2.5 w-2.5 rounded-full bg-red-500/80" />
         <span className="h-2.5 w-2.5 rounded-full bg-amber-500/80" />
         <span className="h-2.5 w-2.5 rounded-full bg-emerald-500/80" />
-        <span className="ml-2 panel-label">Event log</span>
+        <span className="ml-2 panel-label">Output</span>
       </div>
       <div className="terminal flex-1 overflow-y-auto p-4 text-xs leading-relaxed">
         {entries.length === 0 ? (

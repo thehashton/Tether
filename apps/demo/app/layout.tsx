@@ -13,7 +13,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Tether — Live demo',
+  title: 'Tether',
   description: 'Live demo of Tether WebSocket resilience features',
   icons: {
     icon: '/logo.png',

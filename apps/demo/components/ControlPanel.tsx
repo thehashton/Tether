@@ -75,7 +75,7 @@ export function ControlPanel({
   };
 
   return (
-    <div className="panel p-5">
+    <div className="panel flex h-full min-h-[28rem] flex-1 flex-col p-5 lg:min-h-full">
       <div className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center gap-2">
           <span className="mr-2 text-xs font-medium text-[var(--muted)]">Connection</span>
