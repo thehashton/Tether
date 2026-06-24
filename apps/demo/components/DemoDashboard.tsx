@@ -165,7 +165,7 @@ export function DemoDashboard() {
   }, [pushLog]);
 
   return (
-    <div id="main-content" className="page-shell mx-auto flex max-w-7xl flex-col gap-7 px-4 py-8 sm:px-6 sm:py-10">
+    <div id="main-content" className="page-shell mx-auto flex max-w-7xl flex-col gap-5 px-4 py-6 sm:px-6 sm:py-8 lg:gap-6">
       <header className="hero">
         <div className="hero-glow" aria-hidden />
         <a
@@ -186,12 +186,12 @@ export function DemoDashboard() {
             priority
             className="h-auto w-[min(280px,85vw)] drop-shadow-[0_0_24px_rgba(61,214,198,0.25)]"
           />
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-[var(--muted)] sm:text-xl">
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-[var(--muted)] lg:mt-4 lg:text-lg">
             Watch reconnection, backoff, queue drain,{' '}
             <span className="text-[var(--text)]">bufferedAmount</span> backpressure, multiplexing,
             and auth refresh — in real time.
           </p>
-          <ul className="mt-8 flex flex-wrap justify-center gap-3">
+          <ul className="mt-6 flex flex-wrap justify-center gap-2 lg:mt-5">
             {FEATURES.map((feature) => (
               <FeaturePill key={feature.label} label={feature.label} tooltip={feature.tooltip} />
             ))}
