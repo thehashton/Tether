@@ -9,13 +9,20 @@ interface BackoffMeterProps {
 
 export function BackoffMeter({ attempt, delayMs }: BackoffMeterProps) {
   return (
-    <MetricCard label="Reconnect backoff">
+    <MetricCard
+      label="Reconnect backoff"
+      tooltip="Exponential backoff with jitter between reconnect attempts."
+    >
       <MetricStatGrid>
-        <MetricStat value={attempt} hint="retries" title="Reconnect attempt count" />
+        <MetricStat
+          value={attempt}
+          hint="retries"
+          tooltip="Reconnect attempts since the last successful open."
+        />
         <MetricStat
           value={delayMs !== null ? `${delayMs}ms` : '—'}
           hint="next wait"
-          title="Jittered delay before the next reconnect"
+          tooltip="Milliseconds until the next retry — blank while connected."
         />
       </MetricStatGrid>
     </MetricCard>

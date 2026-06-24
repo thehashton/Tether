@@ -23,6 +23,7 @@ export function FloodMeter({ received, target, backpressureEvents }: FloodMeterP
   return (
     <MetricCard
       label="Inbound flood"
+      tooltip="Progress receiving a server-initiated message flood."
       footer={
         showFooter ? (
           <>
@@ -51,13 +52,15 @@ export function FloodMeter({ received, target, backpressureEvents }: FloodMeterP
           value={receivedDisplay}
           hint="received"
           valueClassName="text-orange-300"
-          title="Messages received on the flood channel"
+          tooltip="Flood-channel messages received this run."
         />
         <MetricStat
           value={totalDisplay}
           hint="of total"
           valueClassName="text-orange-300/80"
-          title={target !== null ? `${pct}% complete` : 'No active flood'}
+          tooltip={
+            target !== null ? `${pct}% of the flood delivered so far.` : 'No active flood — press Flood 500 msgs.'
+          }
         />
       </MetricStatGrid>
     </MetricCard>

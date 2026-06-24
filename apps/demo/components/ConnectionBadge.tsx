@@ -33,13 +33,21 @@ interface ConnectionBadgeProps {
 export function ConnectionBadge({ state }: ConnectionBadgeProps) {
   const { label, dotClass, valueClass } = STATE_STYLES[state];
   return (
-    <MetricCard label="Connection">
+    <MetricCard
+      label="Connection"
+      tooltip="WebSocket lifecycle state managed by Tether's reconnecting client."
+    >
       <MetricStatGrid>
-        <MetricStat value={label} hint="status" valueClassName={valueClass} />
+        <MetricStat
+          value={label}
+          hint="status"
+          tooltip="Current state: idle, connecting, open, reconnecting, or closed."
+          valueClassName={valueClass}
+        />
         <MetricStat
           value={<span className={`metric-dot metric-dot-lg ${dotClass}`} aria-hidden />}
           hint="socket"
-          title="WebSocket connection indicator"
+          tooltip="Live socket indicator — color matches connection health."
         />
       </MetricStatGrid>
     </MetricCard>

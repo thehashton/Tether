@@ -147,7 +147,7 @@ export function DemoDashboard() {
   }, [pushLog]);
 
   return (
-    <div className="page-shell mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 sm:py-10">
+    <div className="page-shell mx-auto flex max-w-6xl flex-col gap-5 px-4 py-6 sm:px-6 sm:py-8">
       <header className="hero">
         <div className="hero-glow" aria-hidden />
         <a
@@ -186,7 +186,7 @@ export function DemoDashboard() {
 
       <section>
         <h2 className="section-title">Live metrics</h2>
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
           <ConnectionBadge state={state} />
           <BackoffMeter attempt={attempt} delayMs={delayMs} />
           <QueueDepth queueDepth={queueDepth} bufferedAmount={bufferedAmount} />
@@ -210,7 +210,6 @@ export function DemoDashboard() {
             />
           </div>
           <div className="dashboard-split-pane">
-            <h2 className="dashboard-split-title">Event log</h2>
             <MessageLog entries={entries} className="flex-1" />
           </div>
         </div>
