@@ -12,8 +12,12 @@ export function QueueDepth({ queueDepth, bufferedAmount }: QueueDepthProps) {
   return (
     <MetricCard label="Outbound pressure">
       <MetricStatGrid>
-        <MetricStat value={queueDepth} hint="queued" />
-        <MetricStat value={`${bufferedKb} KB`} hint="buffered" />
+        <MetricStat value={queueDepth} hint="in queue" title="Outbound messages waiting to send" />
+        <MetricStat
+          value={`${bufferedKb} KB`}
+          hint="send buffer"
+          title="socket.bufferedAmount — bytes queued in the WebSocket send buffer"
+        />
       </MetricStatGrid>
     </MetricCard>
   );

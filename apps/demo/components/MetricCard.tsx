@@ -21,14 +21,17 @@ export function MetricCard({ label, children, footer }: MetricCardProps) {
 interface MetricStatProps {
   value: ReactNode;
   hint: string;
+  title?: string;
   valueClassName?: string;
 }
 
-export function MetricStat({ value, hint, valueClassName = '' }: MetricStatProps) {
+export function MetricStat({ value, hint, title, valueClassName = '' }: MetricStatProps) {
   return (
     <div className="metric-stat">
       <p className={`metric-stat-value ${valueClassName}`}>{value}</p>
-      <p className="metric-stat-hint">{hint}</p>
+      <p className="metric-stat-hint" title={title ?? hint}>
+        {hint}
+      </p>
     </div>
   );
 }

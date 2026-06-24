@@ -11,8 +11,12 @@ export function BackoffMeter({ attempt, delayMs }: BackoffMeterProps) {
   return (
     <MetricCard label="Reconnect backoff">
       <MetricStatGrid>
-        <MetricStat value={attempt} hint="attempt" />
-        <MetricStat value={delayMs !== null ? `${delayMs}ms` : '—'} hint="next delay" />
+        <MetricStat value={attempt} hint="retries" title="Reconnect attempt count" />
+        <MetricStat
+          value={delayMs !== null ? `${delayMs}ms` : '—'}
+          hint="next wait"
+          title="Jittered delay before the next reconnect"
+        />
       </MetricStatGrid>
     </MetricCard>
   );
