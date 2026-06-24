@@ -1,7 +1,7 @@
 'use client';
 
 import type { TetherState } from 'tether-ws';
-import { MetricCard, MetricStat, MetricStatGrid } from '@/components/MetricCard';
+import { MetricCard } from '@/components/MetricCard';
 
 const STATE_STYLES: Record<
   TetherState,
@@ -37,19 +37,26 @@ export function ConnectionBadge({ state }: ConnectionBadgeProps) {
       label="Connection"
       tooltip="WebSocket lifecycle state managed by Tether's reconnecting client."
     >
-      <MetricStatGrid className="metric-stat-grid-socket">
-        <MetricStat
-          value={label}
-          hint="status"
-          tooltip="Current state: idle, connecting, open, reconnecting, or closed."
-          valueClassName={valueClass}
-        />
-        <MetricStat
-          value={<span className={`metric-dot metric-dot-lg ${dotClass}`} aria-hidden />}
-          hint="socket"
-          tooltip="Live socket indicator — color matches connection health."
-        />
-      </MetricStatGrid>
+      <div className="connection-metric">
+        <div className="connection-metric-main">
+          <p className={`connection-metric-value ${valueClass}`}>{label}</p>
+          <span className={`metric-dot metric-dot-lg shrink-0 ${dotClass}`} aria-hidden />
+        </div>
+        <div className="connection-metric-labels">
+          <span
+            className="connection-metric-hint"
+            title="Current state: idle, connecting, open, reconnecting, or closed."
+          >
+            status
+          </span>
+          <span
+            className="connection-metric-hint"
+            title="Live socket indicator — color matches connection health."
+          >
+            socket
+          </span>
+        </div>
+      </div>
     </MetricCard>
   );
 }
