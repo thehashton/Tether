@@ -29,17 +29,23 @@ function BtnLabel({ icon, children }: { icon: ReactNode; children: ReactNode }) 
   );
 }
 
-function ControlAction({
+function ControlButton({
   tooltip,
+  className,
+  onClick,
   children,
 }: {
   tooltip: string;
+  className: string;
+  onClick: () => void;
   children: ReactNode;
 }) {
   return (
-    <div className="control-action">
-      {children}
-      <InfoTooltip text={tooltip} size="xs" placement="below" className="control-action-tip" />
+    <div className="control-btn">
+      <button type="button" onClick={onClick} className={`btn ${className}`}>
+        {children}
+      </button>
+      <InfoTooltip text={tooltip} size="xs" placement="below" />
     </div>
   );
 }
@@ -116,30 +122,31 @@ export function ControlPanel({
           <p className="control-group-desc">Force a drop or add server-side latency</p>
         </header>
         <div className="control-actions control-actions-2">
-          <ControlAction tooltip="Server force-closes the WebSocket — simulates a sudden network drop.">
-            <button type="button" onClick={handleKill} className="btn btn-danger">
-              <BtnLabel icon={<IconKill className="h-3.5 w-3.5" />}>Kill connection</BtnLabel>
-            </button>
-          </ControlAction>
-          <ControlAction tooltip="Toggles artificial delay on every server response.">
-            <button
-              type="button"
-              onClick={handleSlowToggle}
-              className={`btn btn-warn ${slowNetwork ? 'btn-warn-active' : ''}`}
-            >
-              <BtnLabel icon={<IconSlowNetwork className="h-3.5 w-3.5" />}>
-                {slowNetwork ? 'Slow network on' : 'Slow network'}
-              </BtnLabel>
-            </button>
-          </ControlAction>
+          <ControlButton
+            tooltip="Server force-closes the WebSocket — simulates a sudden network drop."
+            className="btn-danger"
+            onClick={handleKill}
+          >
+            <BtnLabel icon={<IconKill className="h-3.5 w-3.5" />}>Kill connection</BtnLabel>
+          </ControlButton>
+          <ControlButton
+            tooltip="Toggles artificial delay on every server response."
+            className={`btn-warn ${slowNetwork ? 'btn-warn-active' : ''}`}
+            onClick={handleSlowToggle}
+          >
+            <BtnLabel icon={<IconSlowNetwork className="h-3.5 w-3.5" />}>
+              {slowNetwork ? 'Slow network on' : 'Slow network'}
+            </BtnLabel>
+          </ControlButton>
         </div>
         <div className={`control-field ${slowNetwork ? 'control-field-active' : ''}`}>
           <label className="control-field-label" htmlFor="latency-ms">
             <IconLatency className="control-field-icon" />
-            Response latency
+            <span>Response latency</span>
             <InfoTooltip
               text="Milliseconds of delay applied to each server response when slow network is on."
               size="xs"
+              placement="above"
             />
           </label>
           <div className="control-field-input">
@@ -164,16 +171,20 @@ export function ControlPanel({
           <p className="control-group-desc">Exercise backpressure and outbound queueing</p>
         </header>
         <div className="control-actions control-actions-2">
-          <ControlAction tooltip="Server pushes 500 rapid messages — watch Inbound flood and backpressure events.">
-            <button type="button" onClick={handleFlood} className="btn btn-orange">
-              <BtnLabel icon={<IconFlood className="h-3.5 w-3.5" />}>Flood 500 msgs</BtnLabel>
-            </button>
-          </ControlAction>
-          <ControlAction tooltip="Sends 5 messages while disconnected — they queue and flush in order on reconnect.">
-            <button type="button" onClick={handleQueueWhileDown} className="btn btn-ghost">
-              <BtnLabel icon={<IconQueue className="h-3.5 w-3.5" />}>Queue 5 msgs</BtnLabel>
-            </button>
-          </ControlAction>
+          <ControlButton
+            tooltip="Server pushes 500 rapid messages — watch Inbound flood and backpressure events."
+            className="btn-orange"
+            onClick={handleFlood}
+          >
+            <BtnLabel icon={<IconFlood className="h-3.5 w-3.5" />}>Flood 500 msgs</BtnLabel>
+          </ControlButton>
+          <ControlButton
+            tooltip="Sends 5 messages while disconnected — they queue and flush in order on reconnect."
+            className="btn-ghost"
+            onClick={handleQueueWhileDown}
+          >
+            <BtnLabel icon={<IconQueue className="h-3.5 w-3.5" />}>Queue 5 msgs</BtnLabel>
+          </ControlButton>
         </div>
       </section>
 
@@ -183,11 +194,13 @@ export function ControlPanel({
           <p className="control-group-desc">Refresh token over the open socket</p>
         </header>
         <div className="control-actions">
-          <ControlAction tooltip="Calls refreshAuth() over the live socket without reconnecting.">
-            <button type="button" onClick={handleAuthRefresh} className="btn btn-accent">
-              <BtnLabel icon={<IconRefresh className="h-3.5 w-3.5" />}>Force token refresh</BtnLabel>
-            </button>
-          </ControlAction>
+          <ControlButton
+            tooltip="Calls refreshAuth() over the live socket without reconnecting."
+            className="btn-accent"
+            onClick={handleAuthRefresh}
+          >
+            <BtnLabel icon={<IconRefresh className="h-3.5 w-3.5" />}>Force token refresh</BtnLabel>
+          </ControlButton>
         </div>
       </section>
     </div>
