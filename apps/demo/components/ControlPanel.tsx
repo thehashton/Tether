@@ -93,7 +93,7 @@ export function ControlPanel({
   };
 
   return (
-    <div className="control-panel panel">
+    <div className="control-panel">
       <section className="control-group">
         <header className="control-group-header">
           <h3 className="control-group-title">Connection</h3>
