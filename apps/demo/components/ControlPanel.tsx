@@ -44,7 +44,7 @@ export function ControlPanel({
     } else {
       onLog(
         'info',
-        `Sending flood command — server will push ${count} messages (watch Inbound flood counter, not 500 log lines)`,
+        `Sending flood command — server will push ${count} messages (watch Inbound flood counter)`,
       );
     }
 
@@ -75,10 +75,13 @@ export function ControlPanel({
   };
 
   return (
-    <div className="panel flex h-full min-h-[28rem] flex-1 flex-col p-5 lg:min-h-full">
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="mr-2 text-xs font-medium text-[var(--muted)]">Connection</span>
+    <div className="control-panel panel">
+      <section className="control-group">
+        <header className="control-group-header">
+          <h3 className="control-group-title">Connection</h3>
+          <p className="control-group-desc">Force a drop or add server-side latency</p>
+        </header>
+        <div className="control-actions control-actions-2">
           <button type="button" onClick={handleKill} className="btn btn-danger">
             Kill connection
           </button>
@@ -87,44 +90,55 @@ export function ControlPanel({
             onClick={handleSlowToggle}
             className={`btn btn-warn ${slowNetwork ? 'btn-warn-active' : ''}`}
           >
-            {slowNetwork ? 'Disable slow network' : 'Simulate slow network'}
+            {slowNetwork ? 'Slow network on' : 'Slow network'}
           </button>
-          <label className="btn btn-ghost flex cursor-pointer items-center gap-2">
-            Latency
+        </div>
+        <div className={`control-field ${slowNetwork ? 'control-field-active' : ''}`}>
+          <label className="control-field-label" htmlFor="latency-ms">
+            Response latency
+          </label>
+          <div className="control-field-input">
             <input
+              id="latency-ms"
               type="number"
               min={0}
               max={2000}
               step={100}
               value={latencyMs}
               onChange={(e) => setLatencyMs(Number(e.target.value))}
-              className="w-16 rounded border border-[var(--border)] bg-[var(--bg)] px-2 py-0.5 text-center text-sm tabular-nums"
+              className="control-input"
             />
-            <span className="text-[var(--muted)]">ms</span>
-          </label>
+            <span className="control-field-suffix">ms</span>
+          </div>
         </div>
+      </section>
 
-        <div className="h-px bg-[var(--border)]" />
-
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="mr-2 text-xs font-medium text-[var(--muted)]">Stress test</span>
+      <section className="control-group">
+        <header className="control-group-header">
+          <h3 className="control-group-title">Stress test</h3>
+          <p className="control-group-desc">Exercise backpressure and outbound queueing</p>
+        </header>
+        <div className="control-actions control-actions-2">
           <button type="button" onClick={handleFlood} className="btn btn-orange">
-            Flood 500 messages
+            Flood 500 msgs
           </button>
           <button type="button" onClick={handleQueueWhileDown} className="btn btn-ghost">
-            Queue 5 messages
+            Queue 5 msgs
           </button>
         </div>
+      </section>
 
-        <div className="h-px bg-[var(--border)]" />
-
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="mr-2 text-xs font-medium text-[var(--muted)]">Auth</span>
+      <section className="control-group">
+        <header className="control-group-header">
+          <h3 className="control-group-title">Auth</h3>
+          <p className="control-group-desc">Refresh token over the open socket</p>
+        </header>
+        <div className="control-actions">
           <button type="button" onClick={handleAuthRefresh} className="btn btn-accent">
             Force token refresh
           </button>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
