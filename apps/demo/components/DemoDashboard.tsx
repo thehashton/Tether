@@ -7,12 +7,30 @@ import type { TetherState } from 'tether-ws';
 import { BackoffMeter } from '@/components/BackoffMeter';
 import { ConnectionBadge } from '@/components/ConnectionBadge';
 import { ControlPanel } from '@/components/ControlPanel';
+import { FeaturePill } from '@/components/FeaturePill';
 import { FloodMeter } from '@/components/FloodMeter';
 import { MessageLog, type LogEntry, type LogEntryType } from '@/components/MessageLog';
 import { QueueDepth } from '@/components/QueueDepth';
 import { getTetherClient } from '@/lib/tether-client';
 
-const FEATURES = ['Reconnection', 'Backpressure', 'Multiplexing', 'Auth refresh'] as const;
+const FEATURES = [
+  {
+    label: 'Reconnection',
+    tooltip: 'Automatic reconnect with exponential backoff and jitter after a drop.',
+  },
+  {
+    label: 'Backpressure',
+    tooltip: 'Pauses outbound sends when socket.bufferedAmount crosses a threshold.',
+  },
+  {
+    label: 'Multiplexing',
+    tooltip: 'Route messages across named channels over a single WebSocket.',
+  },
+  {
+    label: 'Auth refresh',
+    tooltip: 'Refresh credentials in-band without tearing down the connection.',
+  },
+] as const;
 const GITHUB_REPO_URL = 'https://github.com/thehashton/Tether';
 
 function IconGithub(props: SVGProps<SVGSVGElement>) {
@@ -175,10 +193,7 @@ export function DemoDashboard() {
           </p>
           <ul className="mt-6 flex flex-wrap justify-center gap-2">
             {FEATURES.map((feature) => (
-              <li key={feature} className="feature-pill">
-                <span className="feature-pill-dot" aria-hidden />
-                {feature}
-              </li>
+              <FeaturePill key={feature.label} label={feature.label} tooltip={feature.tooltip} />
             ))}
           </ul>
         </div>

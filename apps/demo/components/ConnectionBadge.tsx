@@ -2,6 +2,7 @@
 
 import type { TetherState } from 'tether-ws';
 import { MetricCard } from '@/components/MetricCard';
+import { TooltipLabel } from '@/components/InfoTooltip';
 
 const STATE_STYLES: Record<
   TetherState,
@@ -43,18 +44,18 @@ export function ConnectionBadge({ state }: ConnectionBadgeProps) {
           <span className={`metric-dot metric-dot-lg shrink-0 ${dotClass}`} aria-hidden />
         </div>
         <div className="connection-metric-labels">
-          <span
-            className="connection-metric-hint"
-            title="Current state: idle, connecting, open, reconnecting, or closed."
+          <TooltipLabel
+            text="Current state: idle, connecting, open, reconnecting, or closed."
+            placement="above"
           >
             status
-          </span>
-          <span
-            className="connection-metric-hint"
-            title="Live socket indicator — color matches connection health."
+          </TooltipLabel>
+          <TooltipLabel
+            text="Live socket indicator — color matches connection health."
+            placement="above"
           >
             socket
-          </span>
+          </TooltipLabel>
         </div>
       </div>
     </MetricCard>

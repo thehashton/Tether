@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { InfoTooltip } from '@/components/InfoTooltip';
+import { InfoTooltip, TooltipLabel } from '@/components/InfoTooltip';
 
 interface MetricCardProps {
   label: string;
@@ -33,9 +33,17 @@ interface MetricStatProps {
 
 export function MetricStat({ value, hint, tooltip, valueClassName = '' }: MetricStatProps) {
   return (
-    <div className="metric-stat" title={tooltip}>
+    <div className="metric-stat">
       <p className={`metric-stat-value ${valueClassName}`}>{value}</p>
-      <p className="metric-stat-hint">{hint}</p>
+      <p className="metric-stat-hint">
+        {tooltip ? (
+          <TooltipLabel text={tooltip} placement="above">
+            {hint}
+          </TooltipLabel>
+        ) : (
+          hint
+        )}
+      </p>
     </div>
   );
 }
