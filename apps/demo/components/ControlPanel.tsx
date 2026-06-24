@@ -1,6 +1,15 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import { useState } from 'react';
+import {
+  IconFlood,
+  IconKill,
+  IconLatency,
+  IconQueue,
+  IconRefresh,
+  IconSlowNetwork,
+} from '@/components/ControlIcons';
 import { getTetherClient, sendControl } from '@/lib/tether-client';
 
 interface ControlPanelProps {
@@ -8,6 +17,15 @@ interface ControlPanelProps {
   onFloodStart: (count: number) => void;
   slowNetwork: boolean;
   onSlowNetworkChange: (enabled: boolean) => void;
+}
+
+function BtnLabel({ icon, children }: { icon: ReactNode; children: ReactNode }) {
+  return (
+    <span className="btn-label">
+      <span className="btn-icon">{icon}</span>
+      <span>{children}</span>
+    </span>
+  );
 }
 
 export function ControlPanel({
@@ -83,18 +101,21 @@ export function ControlPanel({
         </header>
         <div className="control-actions control-actions-2">
           <button type="button" onClick={handleKill} className="btn btn-danger">
-            Kill connection
+            <BtnLabel icon={<IconKill className="h-3.5 w-3.5" />}>Kill connection</BtnLabel>
           </button>
           <button
             type="button"
             onClick={handleSlowToggle}
             className={`btn btn-warn ${slowNetwork ? 'btn-warn-active' : ''}`}
           >
-            {slowNetwork ? 'Slow network on' : 'Slow network'}
+            <BtnLabel icon={<IconSlowNetwork className="h-3.5 w-3.5" />}>
+              {slowNetwork ? 'Slow network on' : 'Slow network'}
+            </BtnLabel>
           </button>
         </div>
         <div className={`control-field ${slowNetwork ? 'control-field-active' : ''}`}>
           <label className="control-field-label" htmlFor="latency-ms">
+            <IconLatency className="control-field-icon" />
             Response latency
           </label>
           <div className="control-field-input">
@@ -120,10 +141,10 @@ export function ControlPanel({
         </header>
         <div className="control-actions control-actions-2">
           <button type="button" onClick={handleFlood} className="btn btn-orange">
-            Flood 500 msgs
+            <BtnLabel icon={<IconFlood className="h-3.5 w-3.5" />}>Flood 500 msgs</BtnLabel>
           </button>
           <button type="button" onClick={handleQueueWhileDown} className="btn btn-ghost">
-            Queue 5 msgs
+            <BtnLabel icon={<IconQueue className="h-3.5 w-3.5" />}>Queue 5 msgs</BtnLabel>
           </button>
         </div>
       </section>
@@ -135,7 +156,7 @@ export function ControlPanel({
         </header>
         <div className="control-actions">
           <button type="button" onClick={handleAuthRefresh} className="btn btn-accent">
-            Force token refresh
+            <BtnLabel icon={<IconRefresh className="h-3.5 w-3.5" />}>Force token refresh</BtnLabel>
           </button>
         </div>
       </section>
