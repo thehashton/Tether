@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 import type { TetherState } from 'tether-ws';
 import { BackoffMeter } from '@/components/BackoffMeter';
@@ -109,12 +110,15 @@ export function DemoDashboard() {
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-4 p-6">
-      <header className="mb-2">
-        <h1 className="text-3xl font-bold tracking-tight">tether-ws demo</h1>
-        <p className="mt-1 text-[var(--muted)]">
-          Watch reconnection, backoff, queue drain, bufferedAmount backpressure, multiplexing, and
-          auth refresh in real time.
-        </p>
+      <header className="mb-2 flex items-center gap-4">
+        <Image src="/logo.png" alt="tether-ws logo" width={180} height={60} priority />
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">tether-ws demo</h1>
+          <p className="mt-1 text-[var(--muted)]">
+            Watch reconnection, backoff, queue drain, bufferedAmount backpressure, multiplexing, and
+            auth refresh in real time.
+          </p>
+        </div>
       </header>
 
       <div className="grid gap-4 md:grid-cols-3">

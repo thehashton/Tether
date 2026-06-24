@@ -6,7 +6,7 @@
     "dev": "concurrently -k \"tsx server/index.ts\" \"next dev\"",
     "dev:vercel": "vercel dev",
     "dev:next": "next dev",
-    "build": "next build",
+    "build": "pnpm --filter tether-ws build && next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"

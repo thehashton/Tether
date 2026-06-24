@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/logo.png" alt="tether-ws logo" width="420" />
+</p>
+
 # tether-ws
 
 **tether-ws** is a zero-dependency TypeScript WebSocket client that stays connected through drops, slow networks, and forced disconnects — with exponential backoff, real `bufferedAmount` backpressure, multiplexed channels, and auth refresh without reconnecting.

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../docs/logo.png" alt="tether-ws logo" width="320" />
+</p>
+
 # tether-ws
 
 A framework-agnostic, zero-dependency WebSocket client with production-grade resilience.
