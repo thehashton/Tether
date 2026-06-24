@@ -143,6 +143,61 @@ body::before {
   border-color: var(--border-bright);
 }
 
+.metrics-panel-body {
+  overflow: hidden;
+  padding: 0;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+}
+
+.metrics-grid .metric-card {
+  border-radius: 0;
+  border: none;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  box-shadow: none;
+}
+
+.metrics-grid .metric-card:nth-child(2n) {
+  border-right: none;
+}
+
+.metrics-grid .metric-card:nth-child(n + 3) {
+  border-bottom: none;
+}
+
+.metrics-grid .metric-card:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+@media (min-width: 768px) {
+  .metrics-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .metrics-grid .metric-card {
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+  }
+
+  .metrics-grid .metric-card:nth-child(2n) {
+    border-right: 1px solid var(--border);
+  }
+
+  .metrics-grid .metric-card:nth-child(4n) {
+    border-right: none;
+  }
+
+  .metrics-grid .metric-card:nth-child(n + 3) {
+    border-bottom: none;
+  }
+}
+
 .metric-card-label-row,
 .metric-card-header {
   display: flex;

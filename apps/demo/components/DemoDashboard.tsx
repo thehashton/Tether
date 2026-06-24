@@ -185,16 +185,18 @@ export function DemoDashboard() {
       </header>
 
       <section>
-        <h2 className="section-title">Live metrics</h2>
-        <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
-          <ConnectionBadge state={state} />
-          <BackoffMeter attempt={attempt} delayMs={delayMs} />
-          <QueueDepth queueDepth={queueDepth} bufferedAmount={bufferedAmount} />
-          <FloodMeter
-            received={floodReceived}
-            target={floodTarget}
-            backpressureEvents={floodBackpressure}
-          />
+        <div className="metrics-panel-body panel">
+          <h2 className="dashboard-split-title">Live metrics</h2>
+          <div className="metrics-grid">
+            <ConnectionBadge state={state} />
+            <BackoffMeter attempt={attempt} delayMs={delayMs} />
+            <QueueDepth queueDepth={queueDepth} bufferedAmount={bufferedAmount} />
+            <FloodMeter
+              received={floodReceived}
+              target={floodTarget}
+              backpressureEvents={floodBackpressure}
+            />
+          </div>
         </div>
       </section>
 
