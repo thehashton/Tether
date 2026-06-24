@@ -37,7 +37,7 @@ export function ConnectionBadge({ state }: ConnectionBadgeProps) {
       label="Connection"
       tooltip="WebSocket lifecycle state managed by Tether's reconnecting client."
     >
-      <MetricStatGrid>
+      <MetricStatGrid className="metric-stat-grid-socket">
         <MetricStat
           value={label}
           hint="status"

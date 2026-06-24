@@ -40,6 +40,12 @@ export function MetricStat({ value, hint, tooltip, valueClassName = '' }: Metric
   );
 }
 
-export function MetricStatGrid({ children }: { children: ReactNode }) {
-  return <div className="metric-stat-grid">{children}</div>;
+export function MetricStatGrid({
+  children,
+  className = '',
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return <div className={`metric-stat-grid ${className}`.trim()}>{children}</div>;
 }

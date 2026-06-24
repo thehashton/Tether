@@ -191,6 +191,14 @@ body::before {
   align-items: end;
 }
 
+.metric-stat-grid-socket {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.metric-stat-grid-socket .metric-stat + .metric-stat {
+  padding-left: 0.625rem;
+}
+
 .metric-stat {
   display: flex;
   min-width: 0;
@@ -205,13 +213,15 @@ body::before {
 }
 
 .metric-stat-value {
-  font-size: 1.375rem;
+  font-size: clamp(1rem, 2.8vw, 1.375rem);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
   line-height: 1.15;
   color: var(--text);
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .metric-stat-hint {
