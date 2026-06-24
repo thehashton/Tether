@@ -142,11 +142,11 @@ export function DemoDashboard() {
         <div className="hero-glow" aria-hidden />
         <div className="relative flex flex-col items-center text-center">
           <p className="mb-4 text-xs font-semibold tracking-[0.2em] text-[var(--accent)] uppercase">
-            Live WebSocket demo
+            Live demo
           </p>
           <Image
             src="/logo.png"
-            alt="tether"
+            alt="Tether"
             width={280}
             height={72}
             priority

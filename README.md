@@ -1,57 +1,118 @@
 <p align="center">
-  <img src="docs/logo.png" alt="tether-ws logo" width="420" />
+  <img src="docs/logo.png" alt="Tether" width="480" />
 </p>
 
-# tether-ws
+<p align="center">
+  <strong>A resilient WebSocket client that holds on when the connection stretches.</strong>
+</p>
 
-**tether-ws** is a zero-dependency TypeScript WebSocket client that stays connected through drops, slow networks, and forced disconnects — with exponential backoff, real `bufferedAmount` backpressure, multiplexed channels, and auth refresh without reconnecting.
+<p align="center">
+  By <a href="https://github.com/thehashton">Harry Ashton</a>
+</p>
 
-> **Live demo:** run `pnpm dev` in `apps/demo` and open [http://localhost:3000](http://localhost:3000). Deploy to Vercel for production WebSocket Functions support.
+<p align="center">
+  <a href="https://github.com/thehashton/Tether">GitHub</a>
+  ·
+  <a href="https://www.npmjs.com/package/tether-ws">npm</a>
+  ·
+  <a href="#live-demo">Live demo</a>
+</p>
 
-## Why this exists
+<p align="center">
+  <img src="https://img.shields.io/badge/node-%3E%3D22-339933?logo=node.js&logoColor=white" alt="Node 22+" />
+  <img src="https://img.shields.io/badge/typescript-strict-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/runtime%20deps-0-success" alt="Zero runtime dependencies" />
+  <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License" />
+</p>
 
-This project demonstrates four things interviewers and reviewers care about:
+---
 
-1. **Reconnection strategy** — full-jitter exponential backoff with live attempt/delay telemetry
-2. **Real `bufferedAmount` backpressure** — queue flush pauses when the native socket buffer is full (not a synthetic rate limiter)
-3. **Multiplexing** — multiple logical channels over one physical WebSocket
-4. **Auth refresh without disconnect** — token rotation over the existing open socket
+Tether is a zero-dependency TypeScript WebSocket client built for production failure modes: dropped connections, slow networks, forced disconnects, and auth expiry — without falling over.
 
-## Monorepo
+Like a tether, it stays linked. Messages queue while offline, replay in order on reconnect, and back off with full jitter until the socket is open again.
 
-```
-packages/tether-ws   — framework-agnostic client library (npm: tether-ws)
-apps/demo            — Next.js control-panel demo + WebSocket server
-```
+## Live demo
 
-### Quickstart
+A control-panel UI exercises every resilience feature in real time — reconnection, backoff, queue drain, `bufferedAmount` backpressure, multiplexing, and auth refresh.
+
+**[Run locally](#run-the-demo)** or deploy `apps/demo` to Vercel (WebSocket Functions, [public beta](https://vercel.com/changelog/websocket-support-is-now-in-public-beta)).
+
+## What it proves
+
+| | |
+|---|---|
+| **Reconnection** | Full-jitter exponential backoff with live attempt + delay telemetry |
+| **Backpressure** | Queue flush pauses on real `socket.bufferedAmount` — not a synthetic rate limiter |
+| **Multiplexing** | Multiple logical channels over one physical WebSocket |
+| **Auth refresh** | Token rotation over the existing open socket — no disconnect |
+
+## Getting started
+
+Clone the monorepo and install:
 
 ```bash
+git clone git@github.com:thehashton/Tether.git
+cd Tether
 pnpm install
 pnpm build
 pnpm test
 ```
 
-### Run the demo locally
+### Project layout
+
+```
+packages/tether-ws   →  client library (npm: tether-ws)
+apps/demo            →  Next.js demo + WebSocket server
+```
+
+### Use the library
+
+```bash
+npm install tether-ws
+```
+
+```ts
+import { TetherClient } from 'tether-ws';
+
+const client = new TetherClient({
+  url: 'wss://example.com/ws',
+  auth: { getToken: () => fetch('/api/token').then((r) => r.text()) },
+});
+
+client.on('reconnecting', ({ attempt, delayMs }) => {
+  console.log(`retry #${attempt} in ${delayMs}ms`);
+});
+
+client.connect();
+client.send({ hello: 'world' }, { channel: 'chat' });
+client.subscribe('chat', (msg) => console.log(msg));
+```
+
+Full API reference → [`packages/tether-ws/README.md`](packages/tether-ws/README.md)
+
+## Run the demo
 
 ```bash
 cd apps/demo
-cp .env.local.example .env.local   # ws://localhost:3001
-pnpm dev                           # standalone ws server + Next.js UI
+cp .env.local.example .env.local
+pnpm dev
 ```
 
-- **`pnpm dev`** — standalone `ws` server on port 3001 + Next.js (no Vercel CLI required)
-- **`pnpm dev:vercel`** — Vercel runtime with native WebSocket upgrade ([public beta, June 2026](https://vercel.com/changelog/websocket-support-is-now-in-public-beta))
+Open [http://localhost:3000](http://localhost:3000).
 
-Production deploy uses `app/api/ws/route.ts` with `experimental_upgradeWebSocket()` from `@vercel/functions`. Fluid compute must be enabled (default for new Vercel projects since April 2025).
+| Command | What it does |
+|---|---|
+| `pnpm dev` | Standalone WebSocket server on `:3001` + Next.js UI |
+| `pnpm dev:vercel` | Vercel runtime with native WebSocket upgrade |
 
-## Acceptance checklist
+Try **Kill connection** → watch backoff + queue replay. **Flood 500 messages** → inbound backpressure counter climbs. **Force token refresh** → auth rotates without a close event.
 
-- Kill connection → client reconnects with jittered delay, replays queued messages in order
-- Flood 500 messages → inbound backpressure events fire without crashing
-- Force token refresh → `auth-refreshed` with no close/reconnect
-- Library has zero runtime dependencies; ships ESM + CJS
+## Deploy on Vercel
+
+1. Import the repo and set **Root Directory** to `apps/demo`
+2. Ensure [Fluid Compute](https://vercel.com/docs/fluid-compute) is enabled (default on new projects)
+3. Deploy — the WebSocket route lives at `app/api/ws/route.ts` via `experimental_upgradeWebSocket()`
 
 ## License
 
-MIT
+MIT © [Harry Ashton](https://github.com/thehashton)

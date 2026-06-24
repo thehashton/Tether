@@ -1,10 +1,18 @@
 <p align="center">
-  <img src="../../docs/logo.png" alt="tether-ws logo" width="320" />
+  <img src="../../docs/logo.png" alt="Tether" width="320" />
 </p>
 
-# tether-ws
+<p align="center">
+  <strong>Tether</strong> — framework-agnostic WebSocket client with production-grade resilience.
+</p>
 
-A framework-agnostic, zero-dependency WebSocket client with production-grade resilience.
+<p align="center">
+  <a href="https://www.npmjs.com/package/tether-ws">npm</a>
+  ·
+  <a href="../../README.md">Monorepo</a>
+</p>
+
+---
 
 ```bash
 npm install tether-ws
@@ -97,7 +105,7 @@ On reconnect, queued messages flush in FIFO order. Before each `send`, if `socke
 
 ## Inbound backpressure (approximation)
 
-The WebSocket spec provides **no native inbound flow control**. tether-ws approximates it with a bounded processing buffer: incoming messages are queued for async `message` handlers, and when depth exceeds `inboundBufferSize`, `backpressure` is emitted and oldest messages are dropped (or sampled) per `inboundOverflow`.
+The WebSocket spec provides **no native inbound flow control**. Tether approximates it with a bounded processing buffer: incoming messages are queued for async `message` handlers, and when depth exceeds `inboundBufferSize`, `backpressure` is emitted and oldest messages are dropped (or sampled) per `inboundOverflow`.
 
 This is an approximation necessitated by the spec — not true end-to-end flow control — but it prevents unbounded memory growth when consumers fall behind.
 
