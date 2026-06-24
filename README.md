@@ -15,7 +15,7 @@
   ·
   <a href="https://www.npmjs.com/package/tether-ws">npm</a>
   ·
-  <a href="#live-demo">Live demo</a>
+  <a href="https://tether-demo-wheat.vercel.app/">Live demo</a>
 </p>
 
 <p align="center">
@@ -35,7 +35,7 @@ Like a tether, it stays linked. Messages queue while offline, replay in order on
 
 A control-panel UI exercises every resilience feature in real time — reconnection, backoff, queue drain, `bufferedAmount` backpressure, multiplexing, and auth refresh.
 
-**[Run locally](#run-the-demo)** or deploy `apps/demo` to Vercel (WebSocket Functions, [public beta](https://vercel.com/changelog/websocket-support-is-now-in-public-beta)).
+**[tether-demo-wheat.vercel.app](https://tether-demo-wheat.vercel.app/)** — or [run locally](#run-the-demo). Deployed on Vercel with WebSocket Functions ([public beta](https://vercel.com/changelog/websocket-support-is-now-in-public-beta)).
 
 ## What it proves
 
