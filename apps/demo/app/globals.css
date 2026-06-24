@@ -365,19 +365,18 @@ body::before {
 
 .control-panel {
   display: flex;
-  flex: 1;
-  min-height: 0;
-  height: 100%;
+  flex: 0 1 auto;
+  align-self: flex-start;
+  width: 100%;
   flex-direction: column;
-  gap: 0.3125rem;
+  gap: 0.375rem;
   padding: 0.375rem;
 }
 
 .control-group {
   display: flex;
-  flex: 1;
   flex-direction: column;
-  gap: 0.4375rem;
+  gap: 0.5rem;
   border-radius: 0.625rem;
   border: 1px solid var(--border);
   background: rgba(0, 0, 0, 0.2);
@@ -406,7 +405,6 @@ body::before {
 .control-actions {
   display: grid;
   gap: 0.375rem;
-  margin-top: auto;
 }
 
 .control-actions-2 {
@@ -580,37 +578,49 @@ body::before {
 .dashboard-split-body {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr;
-  height: clamp(36rem, 78vh, 48rem);
-  min-height: 36rem;
+  grid-template-rows: auto 1fr;
+  height: clamp(24rem, calc(100dvh - 17rem), 32rem);
+  min-height: 20rem;
   overflow: hidden;
   padding: 0;
 }
 
 .dashboard-split-pane {
   display: flex;
-  height: 100%;
   min-height: 0;
   flex-direction: column;
   min-width: 0;
 }
 
+.dashboard-split-pane:first-child {
+  flex: 0 0 auto;
+}
+
 .dashboard-split-pane + .dashboard-split-pane {
   border-top: 1px solid var(--border);
+  flex: 1;
+  min-height: 12rem;
 }
 
 @media (min-width: 1024px) {
   .dashboard-split-body {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: 1fr;
-    height: clamp(22rem, 52vh, 34rem);
-    min-height: 22rem;
+    height: clamp(18rem, calc(100dvh - 20rem), 26rem);
+    min-height: 18rem;
     align-items: stretch;
+  }
+
+  .dashboard-split-pane:first-child {
+    flex: 1;
+    min-height: 0;
+    justify-content: flex-start;
   }
 
   .dashboard-split-pane + .dashboard-split-pane {
     border-top: none;
     border-left: 1px solid var(--border);
+    min-height: 0;
   }
 }
 
@@ -626,6 +636,8 @@ body::before {
 
 .dashboard-split-body .control-panel {
   min-height: 0;
+  max-height: 100%;
+  overflow-y: auto;
 }
 
 .message-log {
